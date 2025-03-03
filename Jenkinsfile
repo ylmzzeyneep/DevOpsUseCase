@@ -19,6 +19,7 @@ pipeline {
              steps {
                  withSonarQubeEnv('SonarQube-Scanner') {
                      sh '''
+                         cd ${WORKSPACE}
                          sonar-scanner \
                          -Dsonar.projectKey=DevOpsUseCase \
                          -Dsonar.sources=. \
