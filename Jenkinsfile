@@ -31,11 +31,15 @@ pipeline {
             }
         }
 
-       stage('Login to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'deneme', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
+       stage("Docker Deploy To Dev Env"){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'deneme', toolName: 'docker'){
+                        sh "docker pull ${BACKEND_IMAGE}"
+                        sh "docker pull ${FRONTEND_IMAGE}"
+                        sh "docker run -d -p 8080:8080 ${BACKEND_IMAGE}"
+                        sh "docker run -d -p 80:80 ${BACKEND_IMAGE}"
+                    
                     }
                 }
             }
