@@ -5,7 +5,7 @@ pipeline {
         FRONTEND_IMAGE = 'ylmzzeyneep/frontend:v1'   
         BACKEND_IMAGE = 'ylmzzeyneep/backend:v1'
         REGISTRY = 'docker.io'
-        // SONARQUBE_URL = 'http://34.41.204.28:9000'  
+        SONARQUBE_URL = 'http://34.41.204.28:9000'  
     }
 
     stages {
@@ -15,20 +15,20 @@ pipeline {
             }
         }
 
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         withSonarQubeEnv('SonarQube-Scanner') {
-        //             sh '''
-        //                 sonar-scanner \
-        //                 -Dsonar.projectKey=DevOpsUseCase \
-        //                 -Dsonar.sources=. \
-        //                 -Dsonar.host.url=$SONARQUBE_URL \
-        //                 -Dsonar.login=${SONAR_TOKEN}
-        //             '''
-        //         }
-        //     }
+         stage('SonarQube Analysis') {
+             steps {
+                 withSonarQubeEnv('SonarQube-Scanner') {
+                     sh '''
+                         sonar-scanner \
+                         -Dsonar.projectKey=DevOpsUseCase \
+                         -Dsonar.sources=. \
+                         -Dsonar.host.url=$SONARQUBE_URL \
+                         -Dsonar.login=${SONAR_TOKEN}
+                     '''
+                 }
+             }
 
-        // }
+        }
 
         stage('Build Backend Image') {
             steps {
