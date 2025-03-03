@@ -31,19 +31,6 @@ pipeline {
             }
         }
 
-       stage("Docker Deploy To Dev Env"){
-            steps{
-                script{
-                    withDockerRegistry(credentialsId: 'deneme', toolName: 'docker'){
-                        sh "docker pull ${BACKEND_IMAGE}"
-                        sh "docker pull ${FRONTEND_IMAGE}"
-                        sh "docker run -d -p 8080:8080 ${BACKEND_IMAGE}"
-                        sh "docker run -d -p 80:80 ${FRONTEND_IMAGE}"
-                    
-                    }
-                }
-            }
-        }
 
 
         stage('Push Backend Image') {
