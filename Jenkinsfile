@@ -22,7 +22,7 @@ pipeline {
                          cd ${WORKSPACE}
                          sonar-scanner \
                          -Dsonar.projectKey=DevOpsUseCase \
-                         -Dsonar.sources=. \
+                         -Dsonar.sources=./ \
                          -Dsonar.host.url=$SONARQUBE_URL \
                          -Dsonar.login=${SONAR_TOKEN}
                      '''
