@@ -70,6 +70,17 @@ pipeline {
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+
+
+
         stage('Cleanup') {
             steps {
                 sh "docker rmi ${BACKEND_IMAGE} ${FRONTEND_IMAGE}"
