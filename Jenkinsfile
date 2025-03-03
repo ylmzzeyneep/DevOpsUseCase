@@ -4,6 +4,7 @@ pipeline {
     environment {
         FRONTEND_IMAGE = 'ylmzzeyneep/frontend:v1'   
         BACKEND_IMAGE = 'ylmzzeyneep/backend:v1'
+        DOCKER_USER = 'ylmzzeyneep'
         REGISTRY = 'docker.io'
     }
 
@@ -32,9 +33,10 @@ pipeline {
 
         stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ylmzzeyneep/dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_TOKEN')]) {
-                    sh "echo ${DOCKER_TOKEN} | docker login -u ${DOCKER_USER} --password-stdin"
-                }
+               withCredentials([usernamePassword(credentialsId: 'ylmzzeyneep/dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
+                    }
             }
         }
 
