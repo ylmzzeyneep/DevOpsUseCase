@@ -18,7 +18,7 @@ pipeline {
         stage('Build Backend Image') {
             steps {
                 script {
-                    sh "docker build -t ${BACKEND_IMAGE} ./backend"
+                    sh "docker build -t ${BACKEND_IMAGE} ./backend || { echo 'Docker build failed for backend' ; exit 1; }"
                 }
             }
         }
@@ -26,12 +26,12 @@ pipeline {
         stage('Build Frontend Image') {
             steps {
                 script {
-                    sh "docker build -t ${FRONTEND_IMAGE} ./frontend"
+                    sh "docker build -t ${FRONTEND_IMAGE} ./frontend || { echo 'Docker build failed for frontend' ; exit 1; }"
                 }
             }
         }
 
-       stage('Docker login') {
+        stage('Docker login') {
             steps {
                 echo 'Logging in to DockerHub'
                 script {
@@ -41,11 +41,10 @@ pipeline {
             }
         }
 
-
         stage('Push Backend Image') {
             steps {
                 script {
-                    sh "docker push ${BACKEND_IMAGE}"
+                    sh "docker push ${BACKEND_IMAGE} || { echo 'Docker push failed for backend' ; exit 1; }"
                 }
             }
         }
@@ -53,14 +52,16 @@ pipeline {
         stage('Push Frontend Image') {
             steps {
                 script {
-                    sh "docker push ${FRONTEND_IMAGE}"
+                    sh "docker push ${FRONTEND_IMAGE} || { echo 'Docker push failed for frontend' ; exit 1; }"
                 }
             }
         }
 
         stage('Cleanup') {
             steps {
-                sh "docker rmi ${BACKEND_IMAGE} ${FRONTEND_IMAGE}"
+                script {
+                    sh "docker rmi ${BACKEND_IMAGE} ${FRONTEND_IMAGE} || { echo 'Docker rmi failed' ; exit 1; }"
+                }
             }
         }
     }
