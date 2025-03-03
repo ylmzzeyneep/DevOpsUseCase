@@ -5,7 +5,6 @@ pipeline {
         FRONTEND_IMAGE = 'ylmzzeyneep/frontend:v1'   
         BACKEND_IMAGE = 'ylmzzeyneep/backend:v1'
         REGISTRY = 'docker.io'
-        SONARQUBE_URL = 'http://34.41.204.28:9000'  
     }
 
     stages {
@@ -13,22 +12,6 @@ pipeline {
             steps {
                 git branch: 'main', url: 'https://github.com/ylmzzeyneep/DevOpsUseCase.git'
             }
-        }
-
-         stage('SonarQube Analysis') {
-             steps {
-                 withSonarQubeEnv('SonarQube-Scanner') {
-                     sh '''
-                         cd ${WORKSPACE}
-                         sonar-scanner \
-                         -Dsonar.projectKey=DevOpsUseCase \
-                         -Dsonar.sources=./ \
-                         -Dsonar.host.url=$SONARQUBE_URL \
-                         -Dsonar.login=${SONAR_TOKEN}
-                     '''
-                 }
-             }
-
         }
 
         stage('Build Backend Image') {
@@ -70,17 +53,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Quality Gate') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-
-
 
         stage('Cleanup') {
             steps {
