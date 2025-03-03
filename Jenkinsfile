@@ -4,7 +4,7 @@ pipeline {
     environment {
         FRONTEND_IMAGE = 'ylmzzeyneep/frontend:v1'   
         BACKEND_IMAGE = 'ylmzzeyneep/backend:v1'
-        DOCKER_HUB_CRED=credentials('ylmzzeyneep/dockerhub')
+        DOCKER_HUB_CRED = credentials('ylmzzeyneep/dockerhub')
         REGISTRY = 'docker.io'
     }
 
@@ -31,12 +31,14 @@ pipeline {
             }
         }
 
-       stage('Docker login'){
-                    steps {
-                        echo 'Logging in to DockerHub'
-                            bat  "docker login -u ${DOCKER_HUB_CRED_USR} -p ${DOCKER_HUB_CRED_PSW} docker.io"
-                            bat  "docker image prune --force"
-                    }
+       stage('Docker login') {
+            steps {
+                echo 'Logging in to DockerHub'
+                script {
+                    sh "echo ${DOCKER_HUB_CRED_PSW} | docker login -u ${DOCKER_HUB_CRED_USR} --password-stdin"
+                    sh "docker image prune --force"
+                }
+            }
         }
 
 
