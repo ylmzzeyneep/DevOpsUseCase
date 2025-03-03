@@ -38,7 +38,7 @@ pipeline {
                         sh "docker pull ${BACKEND_IMAGE}"
                         sh "docker pull ${FRONTEND_IMAGE}"
                         sh "docker run -d -p 8080:8080 ${BACKEND_IMAGE}"
-                        sh "docker run -d -p 80:80 ${BACKEND_IMAGE}"
+                        sh "docker run -d -p 80:80 ${FRONTEND_IMAGE}"
                     
                     }
                 }
