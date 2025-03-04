@@ -1,11 +1,9 @@
-// frontend/src/App.js
 import React, { useEffect, useState } from 'react';
 
 function App() {
   const [message, setMessage] = useState('');
   const [userData, setUserData] = useState(null);
 
-  // Fetch the welcome message from the backend
   useEffect(() => {
     fetch('http://localhost:5001')
       .then((response) => response.json())
@@ -13,7 +11,6 @@ function App() {
       .catch((error) => console.error('Error:', error));
   }, []);
 
-  // Fetch additional user data from the backend
   useEffect(() => {
     fetch('http://localhost:5001/data')
       .then((response) => response.json())
