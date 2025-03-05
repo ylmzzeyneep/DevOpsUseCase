@@ -29,6 +29,6 @@ spec:
     app: backend
   ports:
   - protocol: TCP
-    port: 80
+    port: 30922
     targetPort: 5000
   type: LoadBalancer
