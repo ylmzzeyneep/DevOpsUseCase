@@ -1,5 +1,5 @@
-//Backend
 const express = require('express');
+const axios = require('axios');  // Axios'u import ettik
 const cors = require('cors');
 const app = express();
 const port = 5000;
@@ -21,7 +21,18 @@ app.get('/data', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-    res.status(200).send('OK');
+    // Dış URL'ye istek atıyoruz
+    axios.get('http://34.133.27.32:30922/health')  
+        .then(response => {
+            if (response.status === 200) {
+                res.status(200).send('Backend is healthy and external health check passed!');
+            } else {
+                res.status(500).send('External health check failed.');
+            }
+        })
+        .catch(error => {
+            res.status(500).send('Error with external health check.');
+        });
 });
 
 app.listen(port, () => {
