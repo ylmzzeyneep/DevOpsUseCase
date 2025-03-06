@@ -21,7 +21,6 @@ app.get('/data', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-    // Dış URL'ye istek atıyoruz
     axios.get('http://34.133.27.32:30922/health')  
         .then(response => {
             if (response.status === 200) {
