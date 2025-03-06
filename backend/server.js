@@ -23,8 +23,8 @@ app.get('/data', (req, res) => {
 app.get('/health', (req, res) => {
     axios.get('http://34.133.27.32:30922/health')  
         .then(response => {
-            if (response.status === 304) {
-                res.status(304).send('Backend is healthy and external health check passed!');
+            if (response.status === 200) {
+                res.status(200).send('Backend is healthy and external health check passed!');
             } else {
                 res.status(500).send('External health check failed.');
             }
