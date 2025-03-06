@@ -1,3 +1,4 @@
+#frontend deployment and service
 apiVersion: apps/v1
 kind: Deployment
 metadata:
