@@ -1,0 +1,35 @@
+#backend deployment and service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: devopsusecase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: ylmzzeyneep/backend:v1
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: devopsusecase
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 30922
+    targetPort: 5000
+  type: LoadBalancer

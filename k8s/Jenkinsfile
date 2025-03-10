@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        SNYK_CREDENTIALS = 'snyk-token'
         DOCKERHUB_CREDENTIALS = 'docker-hub-credentials'
         BACKEND_HEALTH_URL = 'http://34.133.27.32:31400/data'
         ARGOCD_SERVER = '34.133.27.32:31125'  
@@ -11,6 +12,20 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/ylmzzeyneep/DevOpsUseCase.git'
+            }
+        }
+
+        stage('Snyk Security Scan (Frontend Only)') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: SNYK_CREDENTIALS, variable: 'SNYK_TOKEN')]) {
+                        dir('frontend') {
+                            sh 'snyk auth $SNYK_TOKEN'
+                            sh 'snyk test'
+                            echo "✅ Backend için Snyk güvenlik taraması tamamlandı."
+                        }
+                    }
+                }
             }
         }
 
@@ -35,6 +50,15 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+        }
+
+          stage('Trivy Image Scan (Frontend Only)') {
+            steps {
+                script {
+                    sh "trivy image ylmzzeyneep/frontend:${env.BUILD_NUMBER}"
+                    echo "✅ Frontend imajı için Trivy taraması tamamlandı."
                 }
             }
         }
@@ -88,28 +112,5 @@ pipeline {
             }
         }
 
-        stage('Login to ArgoCD') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'argocd-credentials', usernameVariable: 'ARGOCD_USER', passwordVariable: 'ARGOCD_PASS')]) {
-                        sh """
-                        argocd login ${ARGOCD_SERVER} --username $ARGOCD_USER --password $ARGOCD_PASS --insecure
-                        """
-                        echo "✅ Argo CD'ye başarıyla giriş yapıldı."
-                    }
-                }
-            }
-        }
-
-       stage('Deploy Application to ArgoCD') {
-            steps {
-                script {
-                    sh """
-                    argocd app sync devops-case-app
-                    """
-                    echo "✅ Uygulama başarıyla ArgoCD'ye deploy edildi."
-                }
-            }
-        }
     }
 }
