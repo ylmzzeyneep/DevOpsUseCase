@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+//Frontend Update
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [message, setMessage] = useState('');
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:5001')
+      .then((response) => response.json())
+      .then((data) => setMessage(data.message))
+      .catch((error) => console.error('Error:', error));
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:5001/data')
+      .then((response) => response.json())
+      .then((data) => setUserData(data))
+      .catch((error) => console.error('Error:', error));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>{message}</h1>
+      {userData && (
+        <div>
+          <h2>User Info </h2>
+          <p>Name: {userData.name}</p>
+          <p>Age: {userData.age}</p>
+          <p>Location: {userData.location}</p>
+        </div>
+      )}
     </div>
   );
 }
